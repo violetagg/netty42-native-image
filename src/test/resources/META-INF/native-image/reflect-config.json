@@ -1,0 +1,30 @@
+[
+  {
+    "condition": {
+      "typeReachable": "org.example.HttpClientHandler"
+    },
+    "name": "org.example.HttpClientHandler",
+    "queryAllPublicMethods": true
+  },
+  {
+    "condition": {
+      "typeReachable": "org.example.HttpClientInitializer"
+    },
+    "name": "org.example.HttpClientInitializer",
+    "queryAllPublicMethods": true
+  },
+  {
+    "condition": {
+      "typeReachable": "org.example.HttpServerHandler"
+    },
+    "name": "org.example.HttpServerHandler",
+    "queryAllPublicMethods": true
+  },
+  {
+    "condition": {
+      "typeReachable": "org.example.HttpServerInitializer"
+    },
+    "name": "org.example.HttpServerInitializer",
+    "queryAllPublicMethods": true
+  }
+]

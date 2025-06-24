@@ -1,0 +1,22 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17.0.12'
+          distribution: 'graalvm'
+      - name: Build with Netty 4.2.2.Final
+        run: ./gradlew clean nativeTest
+      - name: Build with Netty 4.2.3.Final-SNAPSHOT
+        run: ./gradlew clean nativeTest -PforceNettyVersion='4.2.3.Final-SNAPSHOT'

@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.graalvm.buildtools.native' version '0.10.6'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+ext {
+	nettyDefaultVersion = '4.2.2.Final'
+	if (!project.hasProperty("forceNettyVersion")) {
+		nettyVersion = nettyDefaultVersion
+	}
+	else {
+		nettyVersion = forceNettyVersion
+		println "Netty version defined from command line: ${forceNettyVersion}"
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://central.sonatype.com/repository/maven-snapshots' }
+}
+
+dependencies {
+	testImplementation platform("io.netty:netty-bom:$nettyVersion")
+
+	testImplementation platform('org.junit:junit-bom:5.13.0')
+
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+	testImplementation 'io.netty:netty-codec-http'
+
+	testImplementation 'ch.qos.logback:logback-classic:1.5.18'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+def initializeAtBuildTime = "org.junit.jupiter.api.DisplayNameGenerator\$IndicativeSentences," +
+		"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$ClassInfo," +
+		"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$LifecycleMethods," +
+		"org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor," +
+		"org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor," +
+		"org.junit.jupiter.engine.descriptor.DynamicDescendantFilter\$Mode," +
+		"org.junit.jupiter.engine.descriptor.ExclusiveResourceCollector\$1," +
+		"org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor\$MethodInfo," +
+		"org.junit.jupiter.engine.discovery.ClassSelectorResolver\$DummyClassTemplateInvocationContext," +
+		"org.junit.platform.engine.support.store.NamespacedHierarchicalStore\$EvaluatedValue," +
+		"org.junit.platform.launcher.core.DiscoveryIssueNotifier," +
+		"org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider," +
+		"org.junit.platform.launcher.core.LauncherDiscoveryResult\$EngineResultInfo," +
+		"org.junit.platform.suite.engine.SuiteTestDescriptor\$LifecycleMethods," +
+		"org.junit.platform.launcher.core.LauncherPhase"
+
+graalvmNative {
+	binaries {
+		test {
+			buildArgs.add("--initialize-at-build-time=${initializeAtBuildTime}")
+		}
+	}
+	metadataRepository {
+		version = "0.3.22"
+	}
+}
